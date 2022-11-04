@@ -43,7 +43,7 @@ public class LoginTest {
 
         // Enter Login Information and Log In
         Login login = new Login(driver);
-        login.get();
+        login.waitTillPageLoads();
         login.LoginToSite(emailAddress, passwd);
 
         // Check Account Page comes up
@@ -62,7 +62,7 @@ public class LoginTest {
 
         // Enter Login Information and Log In
         Login login = new Login(driver);
-        login.get();
+        login.waitTillPageLoads();
         login.LoginToSite(badEmailAddress, passwd);
 
         // Check login failed
@@ -82,7 +82,7 @@ public class LoginTest {
 
         // Enter Login Information and Log In
         Login login = new Login(driver);
-        login.get();
+        login.waitTillPageLoads();
         login.LoginToSite(emailAddress, badPasswd);
 
         // Check login failed
