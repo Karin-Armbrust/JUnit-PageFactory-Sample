@@ -6,17 +6,19 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.SlowLoadableComponent;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Clock;
 import java.time.Duration;
 
-public class Login extends PageFactory {
+public class Login extends SlowLoadableComponent {
 
     //karinarmbrustvo@gmail.com and mypassword
     // http://automationpractice.com/index.php
 
     private final WebDriver driver;
-    private final WebDriverWait wait;
+    //private final WebDriverWait wait;
 
     @FindBy(how = How.ID, using = "email")
     WebElement emailField;
@@ -35,16 +37,32 @@ public class Login extends PageFactory {
 
     }
 
-    // Wait method
-    public void waitTillPageLoads() {
-        wait.until(ExpectedConditions.titleIs("Login - My Store"));
-        wait.until(ExpectedConditions.elementToBeClickable(loginButton));
-    }
-
     // Constructor
     public Login(WebDriver driver) {
+        super(Clock.systemDefaultZone(), 10);
         this.driver = driver;
-        initElements(driver, this);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        PageFactory.initElements(driver, this);
+    }
+
+    @Override
+    protected void load() {
+
+    }
+
+    @Override
+    protected void isLoaded() throws Error {
+        boolean ready = false;
+        try {
+            String title = driver.getTitle();
+            ready = title.equals("Login - My Store");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (!ready) {
+            throw new Error("Login Page not ready");
+        }
+
     }
 }
