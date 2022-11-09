@@ -1,10 +1,8 @@
 package testcases;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,17 +11,37 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 
 public class LoginTest {
 
     WebDriver driver;
-    String emailAddress = new String("karinarmbrustvo@gmail.com");
-    String passwd = new String("mypassword");
 
-    String badEmailAddress = "karinkarmbrustvo@gmail.com";
+    private static File screenshotFolder = new File(System.getProperty("user.dir"),
+            "screenshotsFromLoginTest");
+    String userName = new String("standard_user");
+    String passwd = new String("secret_sauce");
+
+    String badUserName = "invalid_user";
 
     String badPasswd = new String ("badpassword");
+
+
+    // Clear the screenshots folder before run
+    @BeforeAll
+    public static void clearScreenshots() {
+        if (screenshotFolder.exists()) {
+            try {
+                FileUtils.cleanDirectory(screenshotFolder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        screenshotFolder.mkdir();
+    }
 
     @BeforeEach
     public void createDriver() {
@@ -31,65 +49,52 @@ public class LoginTest {
 
         driver = new ChromeDriver();
 
-        driver.get("http://automationpractice.com/index.php");
+        driver.get("https://www.saucedemo.com/");
     }
-
     @Test
     public void loginTest() {
-        // Click the Sign In button
-        MainPage page = new MainPage(driver);
-        page.waitUntilPageLoads();
-        page.signInAction();
 
         // Enter Login Information and Log In
         Login login = new Login(driver);
         login.get();
-        login.LoginToSite(emailAddress, passwd);
+        login.LoginToSite(userName, passwd);
 
-        // Check Account Page comes up
-        Account account = new Account(driver);
-        account.get();
-        Assertions.assertTrue(account.checkTitle());
+        // Check Inventory Page comes up
+        Products products = new Products(driver);
+        products.get();
+        Assertions.assertTrue(products.checkHeading());
 
     }
 
     @Test
     public void badEmailLoginTest() {
-        // Click the Sign In button
-        MainPage page = new MainPage(driver);
-        page.waitUntilPageLoads();
-        page.signInAction();
 
         // Enter Login Information and Log In
         Login login = new Login(driver);
         login.get();
-        login.LoginToSite(badEmailAddress, passwd);
+        login.LoginToSite(badUserName, passwd);
 
         // Check login failed
         WebElement errorMessage = new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.presenceOfElementLocated(By.className("alert-danger")));
+                .until(ExpectedConditions.presenceOfElementLocated(By.className("error-message-container")));
         String errorText = errorMessage.getText().substring(0,16);
-        Assertions.assertEquals("There is 1 error", errorText);
+        Assertions.assertEquals("Epic sadface: Us", errorText);
 
     }
 
     @Test
     public void badPasswdLoginTest() {
-        // Click the Sign In button
-        MainPage page = new MainPage(driver);
-        page.waitUntilPageLoads();
-        page.signInAction();
 
         // Enter Login Information and Log In
         Login login = new Login(driver);
         login.get();
-        login.LoginToSite(emailAddress, badPasswd);
+        login.LoginToSite(badPasswd, badPasswd);
 
         // Check login failed
         WebElement errorMessage = new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.presenceOfElementLocated(By.className("alert-danger")));
+                .until(ExpectedConditions.presenceOfElementLocated(By.className("error-message-container")));
         String errorText = errorMessage.getText().substring(0,16);
-        Assertions.assertEquals("There is 1 error", errorText);
+        Assertions.assertEquals("Epic sadface: Us", errorText);
 
     }
 
