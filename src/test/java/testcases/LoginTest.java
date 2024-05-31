@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.*;
@@ -23,9 +24,7 @@ public class LoginTest {
             "screenshotsFromLoginTest");
     String userName = new String("standard_user");
     String passwd = new String("secret_sauce");
-
     String badUserName = "invalid_user";
-
     String badPasswd = new String ("badpassword");
 
 
@@ -44,15 +43,16 @@ public class LoginTest {
     }
 
     @BeforeEach
-    public void createDriver() {
-        WebDriverManager.chromedriver().setup();
-
-        driver = new ChromeDriver();
-
+    public void setupTest() {
+        //WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        System.setProperty("webdriver.chrome.driver", "C:\\QA-Tools\\drivers\\chromedriver123.exe");
+        driver = new ChromeDriver(options);
         driver.get("https://www.saucedemo.com/");
     }
     @Test
-    public void loginTest() {
+    public void goodLoginTest() {
 
         // Enter Login Information and Log In
         Login login = new Login(driver);
@@ -77,7 +77,7 @@ public class LoginTest {
         // Check login failed
         WebElement errorMessage = new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.presenceOfElementLocated(By.className("error-message-container")));
-        String errorText = errorMessage.getText().substring(0,16);
+         String errorText = errorMessage.getText().substring(0,16);
         Assertions.assertEquals("Epic sadface: Us", errorText);
 
     }

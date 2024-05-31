@@ -19,7 +19,7 @@ public class Products extends LoadableComponent {
 
     // Check the Title of the current page
     public boolean checkHeading() {
-        return heading.getText().equals("PRODUCTS");
+        return heading.getText().equals("Products");
     }
 
     public void clickProductAddToCart(String id) {

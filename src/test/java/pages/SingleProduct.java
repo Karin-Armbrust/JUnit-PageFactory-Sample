@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -25,16 +26,19 @@ public class SingleProduct {
 
     public void addToCart() {
         WebElement button = driver.findElement(By.className("btn_inventory"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.className("btn_inventory")));
         button.click();
     }
 
     public int getNumberOfProductsInCart() {
         WebElement cart = driver.findElement(By.className("shopping_cart_badge"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("shopping_cart_badge")));
         return Integer.parseInt(cart.getText());
     }
 
     public void backToProduct() {
         WebElement button = driver.findElement(By.id("back-to-products"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("back-to-products")));
         button.click();
     }
     public String getProductName() {
