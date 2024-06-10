@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import pages.*;
 
 public class AddToCartTest {
@@ -17,17 +18,14 @@ public class AddToCartTest {
     String userName = new String("standard_user");
     String passwd = new String("secret_sauce");
 
+    // Set up Chrome and get website
     @BeforeEach
     public void createDriver() {
-        //WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        System.setProperty("webdriver.chrome.driver", "C:\\QA-Tools\\drivers\\chromedriver123.exe");
-        driver = new ChromeDriver(options);
-        driver.get("https://www.saucedemo.com/");
+        TestSetup setup = new TestSetup();
+        driver = setup.TestSetupDriver(driver);
     }
     @Test
-    public void AddToCartTest() {
+    public void AddToCartTest() throws InterruptedException {
         // Log in
         Login login = new Login(driver);
         login.get();
@@ -58,16 +56,21 @@ public class AddToCartTest {
         // add to cart and check number in cart
         singleProduct.addToCart();
         int numProducts = singleProduct.getNumberOfProductsInCart();
-        System.out.println("Expected: 2");
+        System.out.println("Single Product Expected: 2");
         System.out.println("Actual: " + numProducts);
         Assertions.assertEquals(2, numProducts);
+        Thread.sleep(2000);
 
         // Go back to Products screen and check Number in cart
         singleProduct.backToProduct();
         int numProductsInProduct = products.getNumberOfProductsInCart();
-        System.out.println("Expected: 2");
+        System.out.println("Products Page Expected: 2");
         System.out.println("Actual: " + numProducts);
         Assertions.assertEquals(2, numProductsInProduct);
+        Thread.sleep(2000);
+        products.logOutOfApp();
+
+        // Cart check
     }
 
     @AfterEach

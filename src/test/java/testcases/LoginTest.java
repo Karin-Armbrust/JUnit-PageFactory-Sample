@@ -17,9 +17,7 @@ import java.io.IOException;
 import java.time.Duration;
 
 public class LoginTest {
-
     WebDriver driver;
-
     private static File screenshotFolder = new File(System.getProperty("user.dir"),
             "screenshotsFromLoginTest");
     String userName = new String("standard_user");
@@ -42,15 +40,14 @@ public class LoginTest {
         screenshotFolder.mkdir();
     }
 
+    // Set up Chrome and get the website
+
     @BeforeEach
-    public void setupTest() {
-        //WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        System.setProperty("webdriver.chrome.driver", "C:\\QA-Tools\\drivers\\chromedriver123.exe");
-        driver = new ChromeDriver(options);
-        driver.get("https://www.saucedemo.com/");
+    public void setupNewTest() {
+        TestSetup setup = new TestSetup();
+        driver = setup.TestSetupDriver(driver);
     }
+
     @Test
     public void goodLoginTest() {
 
@@ -64,10 +61,11 @@ public class LoginTest {
         products.get();
         Assertions.assertTrue(products.checkHeading());
 
+        products.logOutOfApp();
     }
 
     @Test
-    public void badEmailLoginTest() {
+    public void badUserNameLoginTest() {
 
         // Enter Login Information and Log In
         Login login = new Login(driver);
@@ -77,7 +75,7 @@ public class LoginTest {
         // Check login failed
         WebElement errorMessage = new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.presenceOfElementLocated(By.className("error-message-container")));
-         String errorText = errorMessage.getText().substring(0,16);
+        String errorText = errorMessage.getText().substring(0,16);
         Assertions.assertEquals("Epic sadface: Us", errorText);
 
     }
@@ -88,7 +86,7 @@ public class LoginTest {
         // Enter Login Information and Log In
         Login login = new Login(driver);
         login.get();
-        login.LoginToSite(badPasswd, badPasswd);
+        login.LoginToSite(userName, badPasswd);
 
         // Check login failed
         WebElement errorMessage = new WebDriverWait(driver, Duration.ofSeconds(5))

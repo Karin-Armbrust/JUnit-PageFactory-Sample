@@ -3,7 +3,10 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.*;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.LoadableComponent;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,7 +19,25 @@ public class Products extends LoadableComponent {
     @FindBy(how = How.CLASS_NAME, using = "title")
     WebElement heading;
 
+    @FindBy(how = How.ID, using = "react-burger-menu-btn")
+    WebElement menuButton;
 
+    @FindBy(how = How.ID, using = "inventory_sidebar_link")
+    WebElement allItems;
+
+    @FindBy(how = How.ID, using = "about_sidebar_link")
+    WebElement about;
+
+    @FindBy(how = How.ID, using = "logout_sidebar_link")
+    WebElement logout;
+
+    // logout of the application
+    public void logOutOfApp() {
+        wait.until(ExpectedConditions.elementToBeClickable(menuButton));
+        menuButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(logout));
+        logout.click();
+    }
     // Check the Title of the current page
     public boolean checkHeading() {
         return heading.getText().equals("Products");
@@ -48,7 +69,7 @@ public class Products extends LoadableComponent {
     public Products(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     @Override
