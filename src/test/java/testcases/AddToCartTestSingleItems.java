@@ -16,7 +16,7 @@ import pages.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddToCartTest {
+public class AddToCartTestSingleItems {
 
     WebDriver driver;
 
@@ -31,11 +31,9 @@ public class AddToCartTest {
         driver = setup.TestSetupDriver(driver);
     }
 
-
     @Test
-    public void AddTwoToCartFromProductsPageTest() throws InterruptedException {
+    public void AddTwoToCartSingleProductsTest() throws InterruptedException {
         int numProducts = 2;
-
         // Log in
         Login login = new Login(driver);
         login.get();
@@ -46,27 +44,46 @@ public class AddToCartTest {
         products.get();
         Assertions.assertTrue(products.checkHeading());
 
-        // Add Products from Products page - one product in cart
-        products.addProductsFromProductsScreen(numProducts);
-        Assertions.assertEquals(numProducts, products.getNumberOfProductsInCart());
+        // Add Product from Product Specific Screen - two products in cart
 
+        // *** go to each product screen and add the product
+        SingleProduct singleProduct = new SingleProduct(driver);
+        String name;
+        int numProductsInCart = 0;
+        for (int i=0; i<numProducts; i++) {
+            // Go to single product page
+            products.clickProduct(singleProduct.productArraySingle[1][i]);
+            // get the name and verify
+            name = new String(singleProduct.getProductName());
+            Assertions.assertEquals(singleProduct.productArraySingle[0][i], name);
+            // Add the product
+            singleProduct.addToCart();
+            // Check cart number on Single Product Page
+            numProductsInCart = singleProduct.getNumberOfProductsInCart();
+            Assertions.assertEquals(i + 1, numProductsInCart);
+            // go back to Products Page
+            singleProduct.backToProduct();
+        }
+
+        // Go back to Products screen and check Number in cart
+        int numProductsInProductScreen = products.getNumberOfProductsInCart();
+        Assertions.assertEquals(numProducts, numProductsInProductScreen);
         // Go to the Cart page and check contents
         products.clickCart();
-
         Cart cart = new Cart(driver);
 
         // Ensure names match in cart to what was ordered
-        for (int i=0; i<numProducts; i++) {
-            Assertions.assertEquals(true, cart.checkItemInCart(products.productArray[1][i]));
+        for (int i = 0; i<numProducts; i++){
+            Assertions.assertEquals(true, cart.checkItemInCart(singleProduct.productArraySingle[0][i]));
         }
-
         // Ensure number of items matches what was ordered
 
         Assertions.assertEquals(numProducts, cart.numProducts());
 
         products.logOutOfApp();
-
     }
+
+
 
     @AfterEach
     public void closeDriver() {

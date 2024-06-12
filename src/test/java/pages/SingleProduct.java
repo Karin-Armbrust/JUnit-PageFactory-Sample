@@ -18,6 +18,9 @@ public class SingleProduct {
     @FindBy(how = How.CLASS_NAME, using = "inventory_details_name")
     WebElement productName;
 
+    @FindBy(how = How.CLASS_NAME, using = "shopping_cart_link")
+    WebElement cartLink;
+
     public SingleProduct(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -25,14 +28,14 @@ public class SingleProduct {
     }
 
     public void addToCart() {
-        WebElement button = driver.findElement(By.className("btn_inventory"));
-        wait.until(ExpectedConditions.elementToBeClickable(By.className("btn_inventory")));
+        WebElement button = driver.findElement(By.id("add-to-cart"));;
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("add-to-cart")));
         button.click();
     }
 
     public int getNumberOfProductsInCart() {
-        WebElement cart = driver.findElement(By.className("shopping_cart_badge"));
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("shopping_cart_badge")));
+        WebElement cart = driver.findElement(By.className("shopping_cart_link"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("shopping_cart_link")));
         return Integer.parseInt(cart.getText());
     }
 
@@ -42,7 +45,32 @@ public class SingleProduct {
         button.click();
     }
     public String getProductName() {
+
         return productName.getText();
     }
+
+    public void clickCart() {
+        cartLink.click();
+
+    }
+
+    public String productArraySingle[][] = {
+            {  // name of the product
+                    "Sauce Labs Backpack",
+                    "Sauce Labs Bolt T-Shirt",
+                    "Sauce Labs Onesie",
+                    "Sauce Labs Bike Light",
+                    "Sauce Labs Fleece Jacket",
+                    "Test.allTheThings() T-Shirt (Red)"
+            },
+            {  // xpath the product image on the Products page
+                    "//*[@id=\"item_4_img_link\"]/img",
+                    "//*[@id=\"item_1_img_link\"]/img",
+                    "//*[@id=\"item_2_img_link\"]/img",
+                    "//*[@id=\"item_0_img_link\"]/img",
+                    "//*[@id=\"item_5_img_link\"]/img",
+                    "//*[@id=\"item_3_img_link\"]/img"
+            }
+    };
 
 }
