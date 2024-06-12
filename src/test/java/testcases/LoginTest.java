@@ -1,7 +1,6 @@
 package testcases;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,33 +11,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 
 public class LoginTest {
     WebDriver driver;
-    private static File screenshotFolder = new File(System.getProperty("user.dir"),
-            "screenshotsFromLoginTest");
     String userName = new String("standard_user");
     String passwd = new String("secret_sauce");
     String badUserName = "invalid_user";
     String badPasswd = new String ("badpassword");
-
-
-    // Clear the screenshots folder before run
-    @BeforeAll
-    public static void clearScreenshots() {
-        if (screenshotFolder.exists()) {
-            try {
-                FileUtils.cleanDirectory(screenshotFolder);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        screenshotFolder.mkdir();
-    }
 
     // Set up Chrome and get the website
 

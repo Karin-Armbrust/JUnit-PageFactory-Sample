@@ -1,8 +1,5 @@
 package pages;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -24,9 +21,6 @@ public class Login extends SlowLoadableComponent {
 
     private final WebDriver driver;
 
-    private File screenshotFolder = new File(System.getProperty("user.dir"),
-            "screenshotsFromLoginTest");
-
     @FindBy(how = How.ID, using = "user-name")
     WebElement uname;
 
@@ -41,16 +35,6 @@ public class Login extends SlowLoadableComponent {
         uname.sendKeys(username);
         password.sendKeys(passwd);
         loginButton.click();
-
-        // Get a screenshot
-        File screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        try {
-            FileUtils.copyFile(screenshot, new File(screenshotFolder,
-                    "Login Result - " + System.currentTimeMillis() + ".png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     // Constructor

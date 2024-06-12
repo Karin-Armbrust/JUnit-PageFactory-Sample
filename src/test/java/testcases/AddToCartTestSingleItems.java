@@ -1,18 +1,21 @@
 package testcases;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pages.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public class AddToCartTestSingleItems {
     String userName = new String("standard_user");
     String passwd = new String("secret_sauce");
 
+    private static File screenshotFolder = new File(System.getProperty("user.dir"),
+            "screenshotsAddToCartTestSingleItems");
 
     // Set up Chrome and get website
     @BeforeEach
@@ -34,6 +39,7 @@ public class AddToCartTestSingleItems {
     @Test
     public void AddTwoToCartSingleProductsTest() throws InterruptedException {
         int numProducts = 2;
+        File screenshot;
         // Log in
         Login login = new Login(driver);
         login.get();
@@ -68,6 +74,16 @@ public class AddToCartTestSingleItems {
         // Go back to Products screen and check Number in cart
         int numProductsInProductScreen = products.getNumberOfProductsInCart();
         Assertions.assertEquals(numProducts, numProductsInProductScreen);
+        // Get a screenshot if not equal
+        if (numProducts != numProductsInProductScreen) {
+            screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            try {
+                FileUtils.copyFile(screenshot, new File(screenshotFolder,
+                        "NumProductsInCart1 - " + System.currentTimeMillis() + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         // Go to the Cart page and check contents
         products.clickCart();
         Cart cart = new Cart(driver);
@@ -79,6 +95,16 @@ public class AddToCartTestSingleItems {
         // Ensure number of items matches what was ordered
 
         Assertions.assertEquals(numProducts, cart.numProducts());
+        // Get a screenshot if not equal
+        if (numProducts != cart.numProducts()) {
+            screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            try {
+                FileUtils.copyFile(screenshot, new File(screenshotFolder,
+                        "NumProductsInCart2 - " + System.currentTimeMillis() + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         products.logOutOfApp();
     }
