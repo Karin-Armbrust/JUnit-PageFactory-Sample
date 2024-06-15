@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// Class AddToCartTestSingleItems - Adding and removing items from the Cart from specific Products Pages
 public class AddToCartTestSingleItems {
 
     WebDriver driver;
@@ -36,6 +37,7 @@ public class AddToCartTestSingleItems {
         driver = setup.TestSetupDriver(driver);
     }
 
+    // AddTwoToCartSingleProductsTest- adds 2 items to the cart from the individual Products Pages
     @Test
     public void AddTwoToCartSingleProductsTest() throws InterruptedException {
         int numProducts = 2;

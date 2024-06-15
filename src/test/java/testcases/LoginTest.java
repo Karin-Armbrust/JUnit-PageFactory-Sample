@@ -14,11 +14,12 @@ import pages.*;
 import java.io.IOException;
 import java.time.Duration;
 
+
 public class LoginTest {
     WebDriver driver;
     String userName = new String("standard_user");
     String passwd = new String("secret_sauce");
-    String badUserName = "invalid_user";
+    String badUserName = new String("invalid_user");
     String badPasswd = new String ("badpassword");
 
     // Set up Chrome and get the website
