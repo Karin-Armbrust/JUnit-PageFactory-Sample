@@ -50,6 +50,18 @@ public class Products extends LoadableComponent {
 
     }
 
+    // Remove the number of products to the cart using the productArray
+    public void removeProductsFromProductsScreen(int numProducts) {
+        WebElement removeProductButton;
+        //Products products = new Products(driver);
+
+        for (int i = 0; i<numProducts; i++ ) {
+            removeProductButton = driver.findElement(By.xpath(productArray[2][i]));
+            removeProductButton.click();
+        }
+
+    }
+
     // logout of the application
     public void logOutOfApp() {
         wait.until(ExpectedConditions.elementToBeClickable(menuButton));
@@ -77,7 +89,11 @@ public class Products extends LoadableComponent {
 
     public int getNumberOfProductsInCart() {
         WebElement cart = driver.findElement(By.className("shopping_cart_link"));
-        return Integer.parseInt(cart.getText());
+        if (!cart.getText().equals("")) {
+            return Integer.parseInt(cart.getText());
+        } else {
+            return 0;
+        }
     }
 
     public String getProductName(String xPath) {
@@ -89,8 +105,8 @@ public class Products extends LoadableComponent {
     public void clickProduct(String xPath) {
         WebElement item = driver.findElement(By.xpath(xPath));
         item.click();
-
     }
+
 
     public void clickCart() {
         cartLink.click();
@@ -145,6 +161,15 @@ public class Products extends LoadableComponent {
                     "Sauce Labs Bike Light",
                     "Sauce Labs Fleece Jacket",
                     "Test.allTheThings() T-Shirt (Red)"
+            },
+            { //xpath to Remove Button
+                    "//*[@id=\"remove-sauce-labs-backpack\"]",
+                    "//*[@id=\"remove-sauce-labs-bolt-t-shirt\"]",
+                    "//*[@id=\"remove-sauce-labs-onesie\"]",
+                    "//*[@id=\"remove-sauce-labs-bike-light\"]",
+                    "//*[@id=\"remove-sauce-labs-fleece-jacket\"]",
+                    "//*[@id=\"remove-test.allthethings()-t-shirt-(red)\"]"
+
             }
     };
 

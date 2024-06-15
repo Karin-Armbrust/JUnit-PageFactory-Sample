@@ -27,16 +27,30 @@ public class SingleProduct {
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
+    // Add a product to the cart from a specific product page
     public void addToCart() {
         WebElement button = driver.findElement(By.id("add-to-cart"));;
         wait.until(ExpectedConditions.elementToBeClickable(By.id("add-to-cart")));
         button.click();
     }
 
+    // Remove a product to the cart from a specific product page
+    public void removeFromCart() {
+        WebElement button = driver.findElement(By.id("remove"));;
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("remove")));
+        button.click();
+    }
+
     public int getNumberOfProductsInCart() {
         WebElement cart = driver.findElement(By.className("shopping_cart_link"));
         wait.until(ExpectedConditions.presenceOfElementLocated(By.className("shopping_cart_link")));
-        return Integer.parseInt(cart.getText());
+
+        // if nothing in the cart we want to return 0
+        if (!(cart.getText().equals(""))) {
+            return Integer.parseInt(cart.getText());
+        } else {
+            return 0;
+        }
     }
 
     public void backToProduct() {
