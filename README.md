@@ -1,4 +1,4 @@
 # PageFactory-Sample
-Sample project using PageFactory
+Sample project using JUnit and PageFactory. It includes screenshot functionaity and uses the @Suite class to organize the tests to be run.
 
-This is a sample project that uses PageFactory including LoadableComponents and SlowLoadableComponents. It will be added to as time permits.
+Also uses LoadableComponents and SlowLoadableComponents.
